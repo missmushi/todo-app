@@ -1,0 +1,126 @@
+$primary-color: #f5f5f5;
+
+body {
+  background-color: $primary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "Roboto";
+}
+
+.content {
+  text-align: center;
+  color: white;
+}
+
+.progress {
+  background-color: #e07c7c;
+  padding-left: 20px;
+  padding-top: 0.02px;
+  padding-bottom: 1px;
+  border-radius: 20px;
+  padding-right: 20px;
+  color: white;
+
+  h1 {
+    font-weight: 500;
+    font-size: 28px;
+  }
+
+  p {
+    color: #ebb9b8;
+  }
+}
+
+.task {
+  background-color: white;
+  margin-top: 17px;
+  padding: 15px;
+  border-radius: 30px;
+}
+
+.custom-checkbox:checked::before {
+  background-color: #585292; /* Change the color to #585292 */
+}
+
+//dropdown
+.main {
+  display: block;
+  position: relative;
+  padding-left: 15px;
+  margin-bottom: 15px;
+}
+
+/* Hide the default checkbox */
+input[type=checkbox] {
+  visibility: hidden;
+}
+
+/* Creating a custom checkbox
+based on demand */
+.geekmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  background-color: white;
+  border: 2px solid #585292;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Specify the background color to be
+shown when checkbox is checked */
+.main input:checked ~ .geekmark {
+  background-color: #585292;
+}
+
+/* Checkmark to be shown in checkbox */
+/* It is not be shown when not checked */
+.geekmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Display checkmark when checked */
+.main input:checked ~ .geekmark:after {
+  display: block;
+}
+
+/* Styling the checkmark using webkit */
+/* Rotated the rectangle by 45 degree and 
+showing only two border to make it look
+like a tickmark */
+.main .geekmark:after {
+  left: 9px;
+  bottom: 7px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.yolo {
+  width: 100%; /* Default width for smaller screens */
+
+  @media (min-width: 768px) {
+    width: 500px; /* Adjust width for medium-sized screens */
+  }
+
+  @media (min-width: 1024px) {
+    width: 800px; /* Adjust width for larger screens */
+  }
+}
+
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
