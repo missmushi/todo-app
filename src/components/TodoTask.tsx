@@ -17,6 +17,17 @@ interface Todo {
   completed: boolean;
 }
 
+function filterTodos(todos: Todo[], filter: string): Todo[] {
+  switch (filter) {
+    case "completed":
+      return todos.filter((todo) => todo.completed);
+    case "incomplete":
+      return todos.filter((todo) => !todo.completed);
+    default:
+      return todos;
+  }
+}
+
 const TodoApp: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [editingTodoId, setEditingTodoId] = useState<string>("");
@@ -49,30 +60,6 @@ const TodoApp: React.FC = () => {
       });
   };
 
-  const toggleTodo = (id: string) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-
-    const todoToUpdate = todos.find((todo) => todo.id === id);
-    if (todoToUpdate) {
-      console.log("todotoupdate", todoToUpdate.id, id);
-      const updatedFields = {
-        id: todoToUpdate.id,
-        title: todoToUpdate.title,
-        completed: !todoToUpdate.completed,
-      };
-      updateTodo(id, updatedFields)
-        .then((updatedTodo) => {
-          // Handle the updated todo if needed
-        })
-        .catch((error) => {
-          console.error("Error updating todo:", error);
-        });
-    }
-  };
-
   const deleteTodoItem = (id: string) => {
     deleteTodo(id)
       .then(() => {
@@ -84,19 +71,39 @@ const TodoApp: React.FC = () => {
       });
   };
 
-  const startEditing = (id: string, title: string) => {
-    setEditingTodoId(id);
-    setEditingTodoTitle(title);
-  };
-
-  const saveEditing = () => {
-    if (editingTodoTitle.trim() === "") return;
+  const handleTodoUpdate = (id: string, updatedFields: any) => {
     const updatedTodos = todos.map((todo) =>
-      todo.id === editingTodoId ? { ...todo, title: editingTodoTitle } : todo
+      todo.id === id ? { ...todo, ...updatedFields } : todo
     );
     setTodos(updatedTodos);
-    console.log("updatedTodos", updatedTodos);
-
+  
+    updateTodo(id, updatedFields)
+      .then(() => {
+        // Handle the updated todo if needed
+        if (id === editingTodoId) {
+          setEditingTodoId("");
+          setEditingTodoTitle("");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating todo:", error);
+      });
+  };
+  
+  const toggleTodo = (id: string) => {
+    const todoToUpdate = todos.find((todo) => todo.id === id);
+    if (todoToUpdate) {
+      const updatedFields = {
+        id: todoToUpdate.id,
+        title: todoToUpdate.title,
+        completed: !todoToUpdate.completed,
+      };
+      handleTodoUpdate(id, updatedFields);
+    }
+  };
+  
+  const saveEditing = () => {
+    if (editingTodoTitle.trim() === "") return;
     const todoToUpdate = todos.find((todo) => todo.id === editingTodoId);
     if (todoToUpdate) {
       const updatedFields = {
@@ -104,20 +111,16 @@ const TodoApp: React.FC = () => {
         title: editingTodoTitle,
         completed: todoToUpdate.completed,
       };
-      updateTodo(editingTodoId, updatedFields)
-        .then(() => {
-          // Handle the updated todo if needed
-          setEditingTodoId("");
-          setEditingTodoTitle("");
-        })
-        .catch((error) => {
-          console.error("Error updating todo:", error);
-        });
+      handleTodoUpdate(editingTodoId, updatedFields);
     }
   };
 
+  const startEditing = (id: string, title: string) => {
+    setEditingTodoId(id);
+    setEditingTodoTitle(title);
+  };
+  
   const filteredTodos = filterTodos(todos, filter);
-
   const handleFilterChange = (selectedFilter: string) => {
     setFilter(selectedFilter);
   };
@@ -185,13 +188,3 @@ const TodoApp: React.FC = () => {
 
 export default TodoApp;
 
-function filterTodos(todos: Todo[], filter: string): Todo[] {
-  switch (filter) {
-    case "completed":
-      return todos.filter((todo) => todo.completed);
-    case "incomplete":
-      return todos.filter((todo) => !todo.completed);
-    default:
-      return todos;
-  }
-}
