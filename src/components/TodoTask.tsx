@@ -19,9 +19,9 @@ interface Todo {
 
 function filterTodos(todos: Todo[], filter: string): Todo[] {
   switch (filter) {
-    case "completed":
+    case "done":
       return todos.filter((todo) => todo.completed);
-    case "incomplete":
+    case "undone":
       return todos.filter((todo) => !todo.completed);
     default:
       return todos;
