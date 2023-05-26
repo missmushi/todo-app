@@ -18,9 +18,7 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ filter, onFilterChange }) => {
         value={filter}
         onChange={handleFilterChange}
       >
-        <option value="all">
-          <div className="option-filter">All</div>
-        </option>
+        <option value="all">All</option>
         <option value="done">Done</option>
         <option value="undone">Undone</option>
       </select>
