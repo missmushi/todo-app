@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styles/dropdownMenu.scss";
 
-interface Todo {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
 interface DropdownMenuProps {
   id: string;
   onDelete: (id: string) => void;
