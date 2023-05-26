@@ -19,9 +19,10 @@ interface Todo {
 interface DropdownMenuProps {
   id: string;
   onDelete: (id: string) => void;
+  onEdit: () => void;
 }
 
-function DropdownMenu({ id, onDelete }: DropdownMenuProps) {
+function DropdownMenu({ id, onDelete, onEdit }: DropdownMenuProps) {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -51,6 +52,7 @@ function DropdownMenu({ id, onDelete }: DropdownMenuProps) {
   const handleEditClick = () => {
     setIsEditing(true);
     setIsDropdownOpen(false);
+    onEdit();
   };
 
   const handleSaveClick = () => {

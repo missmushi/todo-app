@@ -149,20 +149,25 @@ const TodoApp: React.FC = () => {
         </div>
         <p>{progress.toFixed(0)}% completed</p>
       </div>
+      <div className="menu">
       <h2>Task</h2>
       <TaskFilter filter={filter} onFilterChange={handleFilterChange} />
+      </div>
       {filteredTodos.map((todo) => (
         <div className="task" key={todo.id}>
           {editingTodoId === todo.id ? (
-            <>
+            <div className="menu edit-input-box">
               <input
                 type="text"
                 value={editingTodoTitle}
                 onChange={(e) => setEditingTodoTitle(e.target.value)}
               />
-              <button onClick={saveEditing}>Save</button>
-              <button onClick={cancelEditing}>Cancel</button>
-            </>
+              {/* <button onClick={saveEditing}>Save</button>
+              <button onClick={cancelEditing}>Cancel</button> */}
+              <button onClick={saveEditing} className="save-button">
+                Save
+              </button>
+            </div>
           ) : (
             <>
               <div className="menu">
@@ -182,11 +187,15 @@ const TodoApp: React.FC = () => {
                     {todo.title}
                   </span>
                 </label>
-                <DropdownMenu onDelete={deleteTodoItem} id={todo.id} />
+                <DropdownMenu
+                  onDelete={deleteTodoItem}
+                  id={todo.id}
+                  onEdit={() => startEditing(todo.id, todo.title)}
+                />
               </div>
-              <button onClick={() => startEditing(todo.id, todo.title)}>
+              {/* <button onClick={() => startEditing(todo.id, todo.title)}>
                 Edit
-              </button>
+              </button> */}
             </>
           )}
           {/* <button onClick={() => deleteTodoItem(todo.id)}>Delete</button> */}
