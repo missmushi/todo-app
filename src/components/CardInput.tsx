@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
-import "../styles/cardInputBox.scss"
+import React, { useState } from "react";
+import "../styles/cardInput.scss";
 
-interface CardInputBoxProps {
+interface CardInputProps {
   onTitleAdded: (title: string) => void;
 }
 
-const CardInputBox: React.FC<CardInputBoxProps> = ({ onTitleAdded }) => {
-  const [title, setTitle] = useState('');
+const CardInput: React.FC<CardInputProps> = ({ onTitleAdded }) => {
+  const [title, setTitle] = useState("");
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
 
   const handleBlur = () => {
-    if (title.trim() !== '') {
+    if (title.trim() !== "") {
       onTitleAdded(title.trim());
-      setTitle('');
+      setTitle("");
     }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && title.trim() !== '') {
+    if (event.key === "Enter" && title.trim() !== "") {
       onTitleAdded(title.trim());
-      setTitle('');
+      setTitle("");
     }
   };
 
   return (
-    <div className="card-input-box" onBlur={handleBlur}>
+    <div className="card-input" onBlur={handleBlur}>
       <input
         type="text"
         placeholder="Add you todo..."
@@ -39,4 +39,4 @@ const CardInputBox: React.FC<CardInputBoxProps> = ({ onTitleAdded }) => {
   );
 };
 
-export default CardInputBox;
+export default CardInput;

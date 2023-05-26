@@ -1,29 +1,31 @@
 import React from "react";
-import "../styles/taskFilter.scss"
+import "../styles/todoFilter.scss";
 
-interface TaskFilterProps {
+interface TodoFilterProps {
   filter: string;
   onFilterChange: (selectedFilter: string) => void;
 }
 
-const TaskFilter: React.FC<TaskFilterProps> = ({ filter, onFilterChange }) => {
+const TodoFilter: React.FC<TodoFilterProps> = ({ filter, onFilterChange }) => {
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onFilterChange(event.target.value);
   };
 
   return (
-    <div className="filter-container">
+    <div>
       <select
         className="filter-dropdown"
         value={filter}
         onChange={handleFilterChange}
       >
-        <option value="all">All</option>
-        <option value="completed">Completed</option>
-        <option value="incomplete">Incomplete</option>
+        <option value="all">
+          <div className="option-filter">All</div>
+        </option>
+        <option value="done">Done</option>
+        <option value="undone">Undone</option>
       </select>
     </div>
   );
 };
 
-export default TaskFilter;
+export default TodoFilter;

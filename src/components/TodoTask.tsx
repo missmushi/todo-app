@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { fetchTodos, createTodo, updateTodo, deleteTodo } from "./api/todosApi";
-import "./styles/todo.scss";
-import DropdownMenu from "./components/DropdownMenu";
-import CardInputBox from "./components/CardInputBox";
-import TaskFilter from "./components/TaskFilter";
+import {
+  fetchTodos,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} from "../api/todosApi";
+import DropdownMenu from "./DropdownMenu";
+import CardInputBox from "./CardInput";
+import TaskFilter from "./TodoFilter";
+import Progress from "./Progress";
+import "../styles/todoTask.scss";
 
 interface Todo {
   id: string;
@@ -13,7 +19,6 @@ interface Todo {
 
 const TodoApp: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
   const [editingTodoId, setEditingTodoId] = useState<string>("");
   const [editingTodoTitle, setEditingTodoTitle] = useState("");
   const [filter, setFilter] = useState("all");
@@ -38,7 +43,6 @@ const TodoApp: React.FC = () => {
     createTodo(todo)
       .then((response) => {
         setTodos([...todos, response]);
-        setNewTodo("");
       })
       .catch((error) => {
         console.error("Error creating todo:", error);
@@ -53,8 +57,9 @@ const TodoApp: React.FC = () => {
 
     const todoToUpdate = todos.find((todo) => todo.id === id);
     if (todoToUpdate) {
+      console.log("todotoupdate", todoToUpdate.id, id);
       const updatedFields = {
-        id: id,
+        id: todoToUpdate.id,
         title: todoToUpdate.title,
         completed: !todoToUpdate.completed,
       };
@@ -82,11 +87,6 @@ const TodoApp: React.FC = () => {
   const startEditing = (id: string, title: string) => {
     setEditingTodoId(id);
     setEditingTodoTitle(title);
-  };
-
-  const cancelEditing = () => {
-    setEditingTodoId("");
-    setEditingTodoTitle("");
   };
 
   const saveEditing = () => {
@@ -127,57 +127,37 @@ const TodoApp: React.FC = () => {
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="yolo">
-      <div className="progress">
-        <h1>Progress</h1>
-        <div
-          style={{
-            width: "100%",
-            height: "7.34px",
-            backgroundColor: "#3B3B3B",
-            borderRadius: "10px",
-          }}
-        >
-          <div
-            style={{
-              width: `${progress}%`,
-              height: "100%",
-              backgroundColor: "#FFFFFF",
-              borderRadius: "10px",
-            }}
-          />
-        </div>
-        <p>{progress.toFixed(0)}% completed</p>
+    <div className="display">
+      <Progress progress={progress} />
+
+      <div className="display-flex gap">
+        <h2>Task</h2>
+        <TaskFilter filter={filter} onFilterChange={handleFilterChange} />
       </div>
-      <div className="menu">
-      <h2>Task</h2>
-      <TaskFilter filter={filter} onFilterChange={handleFilterChange} />
-      </div>
+
       {filteredTodos.map((todo) => (
         <div className="task" key={todo.id}>
           {editingTodoId === todo.id ? (
-            <div className="menu edit-input-box">
+            <div className="display-flex edit-input">
               <input
                 type="text"
                 value={editingTodoTitle}
                 onChange={(e) => setEditingTodoTitle(e.target.value)}
               />
-              {/* <button onClick={saveEditing}>Save</button>
-              <button onClick={cancelEditing}>Cancel</button> */}
               <button onClick={saveEditing} className="save-button">
                 Save
               </button>
             </div>
           ) : (
             <>
-              <div className="menu">
-                <label className="main">
+              <div className="display-flex">
+                <label className="checkbox">
                   <input
                     type="checkbox"
                     checked={todo.completed}
                     onChange={() => toggleTodo(todo.id)}
                   />
-                  <span className="geekmark"></span>
+                  <span className="checkmark"></span>
                   <span
                     style={{
                       textDecoration: todo.completed ? "line-through" : "none",
@@ -193,20 +173,11 @@ const TodoApp: React.FC = () => {
                   onEdit={() => startEditing(todo.id, todo.title)}
                 />
               </div>
-              {/* <button onClick={() => startEditing(todo.id, todo.title)}>
-                Edit
-              </button> */}
             </>
           )}
-          {/* <button onClick={() => deleteTodoItem(todo.id)}>Delete</button> */}
         </div>
       ))}
-      {/* <input
-        type="text"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-      /> */}
-      {/* <button onClick={addTodo}>Add Todo</button> */}
+
       <CardInputBox onTitleAdded={addTodo} />
     </div>
   );

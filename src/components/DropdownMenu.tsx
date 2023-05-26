@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { fetchTodos, createTodo, updateTodo, deleteTodo } from "../api/todosApi";
-import "../styles/dropdown.scss";
-
-interface Props {
-  todo: {
-    id: string;
-    title: string;
-    completed: boolean;
-  };
-}
+import "../styles/dropdownMenu.scss";
 
 interface Todo {
   id: string;
@@ -22,32 +13,10 @@ interface DropdownMenuProps {
   onEdit: () => void;
 }
 
-function DropdownMenu({ id, onDelete, onEdit }: DropdownMenuProps) {
-  const [todos, setTodos] = useState<Todo[]>([]);
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ id, onDelete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchTodos()
-      .then((response) => {
-        setTodos(response);
-      })
-      .catch((error) => {
-        console.error("Error fetching todos:", error);
-      });
-  }, []);
-
-  const deleteTodoItem = (id: string) => {
-    deleteTodo(id)
-      .then(() => {
-        const updatedTodos = todos.filter((todo) => todo.id !== id);
-        setTodos(updatedTodos);
-      })
-      .catch((error) => {
-        console.error("Error deleting todo:", error);
-      });
-  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -58,11 +27,9 @@ function DropdownMenu({ id, onDelete, onEdit }: DropdownMenuProps) {
   const handleSaveClick = () => {
     setIsEditing(false);
     setIsDropdownOpen(true);
-   
   };
 
   const handleDelete = () => {
-    // Add your delete logic here
     onDelete(id);
   };
 
@@ -103,14 +70,14 @@ function DropdownMenu({ id, onDelete, onEdit }: DropdownMenuProps) {
       </div>
       {isDropdownOpen && (
         <div className="dropdown-content">
-          <button onClick={handleEditClick}>Edit</button>
-          <button onClick={handleDelete} className="delete-button">
+          <option onClick={handleEditClick}>Edit</option>
+          <option onClick={handleDelete} className="delete-option">
             Delete
-          </button>
+          </option>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default DropdownMenu;
